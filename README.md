@@ -3,7 +3,7 @@
 This project demonstrates the design and implementation of an end-to-end batch data pipeline on Google Cloud Platform (GCP).
 The primary goal of this project is to gain hands-on experience with GCP data engineering services and understand how they integrate to build scalable and automated data pipelines.
 
-## 🚀 Technologies & Services Used
+### 🚀 Technologies & Services Used
 
 Google Cloud Storage (GCS)
 
@@ -23,7 +23,7 @@ Python
 
 KaggleHub
 
-📊 Dataset
+### 📊 Dataset
 
 The pipeline uses a publicly available dataset from Kaggle:
 
@@ -32,7 +32,7 @@ Delivery Logistics Dataset
 
 This dataset contains delivery-related records suitable for batch ingestion and analytical processing.
 
-1️⃣ Data Ingestion (Cloud Functions + KaggleHub)
+### Data Ingestion (Cloud Functions + KaggleHub)
 
 A Cloud Function is implemented to fetch the dataset using the KaggleHub library.
 
@@ -48,13 +48,13 @@ When triggered via Cloud Functions, it fails while reading data from Kaggle.
 
 This issue is currently under investigation (likely related to authentication, environment variables, or library compatibility in the Cloud Functions runtime).
 
-2️⃣ Scheduling & Automation (Cloud Scheduler)
+### Scheduling & Automation (Cloud Scheduler)
 
 Cloud Scheduler is configured to trigger the Cloud Function at predefined intervals.
 
 This enables automated batch ingestion without manual intervention.
 
-3️⃣ Data Transformation (CSV → Parquet)
+### Data Transformation (CSV → Parquet)
 
 The raw CSV data from the ingestion bucket is:
 
@@ -66,7 +66,7 @@ Converted into Parquet format
 
 The transformed data is stored in a separate GCS bucket optimized for analytics.
 
-4️⃣ Data Loading & Analytics (Dataflow → BigQuery)
+### Data Loading & Analytics (Dataflow → BigQuery)
 
 Dataflow (Apache Beam) is used to:
 
@@ -76,7 +76,7 @@ Load the processed data into BigQuery
 
 This enables fast SQL-based analytics and downstream reporting.
 
-🎯 Key Learning Outcomes
+## 🎯 Key Learning Outcomes
 
 Building serverless ingestion pipelines using Cloud Functions
 
@@ -90,7 +90,7 @@ Designing analytics-ready datasets in BigQuery
 
 Understanding real-world cloud issues like environment-specific failures
 
-🛠️ Project Status
+## 🛠️ Project Status
 
 ✅ End-to-end pipeline implemented
 
