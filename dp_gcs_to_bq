@@ -1,0 +1,65 @@
+import apache_beam
+from apache_beam.options.pipeline_options import PipelineOptions
+
+PARQUET_DATA_BUCKET = "<PATH>*.parquet"
+BQ_TABLE = '<DB_NAME.TABLE_NAME>'
+
+class CleanData(apache_beam.DoFn):
+    def process(self, element):
+        def to_float(val):
+            if val is None:
+                return None
+            try:
+                return float(val)
+            except:
+                return None
+
+        def to_int(val):
+            if val is None:
+                return None
+            try:
+                return int(val)
+            except:
+                return None
+
+        def to_bool(val):
+            if val is None:
+                return None
+            if isinstance(val, bool):
+                return val
+
+            if isinstance(val, str):
+                return val.lower() == "true"
+            return bool(val)
+
+        cleaned = {
+            "delivery_id": str(element.get("delivery_id")),
+            "delivery_partner": element.get("delivery_partner"),
+            "package_type": element.get("package_type"),
+            "vehicle_type": element.get("vehicle_type"),
+            "delivery_mode": element.get("delivery_mode"),
+            "region": element.get("region"),
+            "weather_condition": element.get("weather_condition"),
+            "distance_km": to_float(element.get("distance_km")),
+            "package_weight_kg": to_float(element.get("package_weight_kg")),
+            "delivery_time_hours": to_float(element.get("delivery_time_hours")),
+            "expected_time_hours": to_float(element.get("expected_time_hours")),
+            "delayed": to_bool(element.get("delayed")),
+            "delivery_status": element.get("delivery_status"),
+            "delivery_rating": to_int(element.get("delivery_rating")),
+            "delivery_cost": to_float(element.get("delivery_cost")),
+        }
+
+        yield cleaned
+
+
+with apache_beam.Pipeline(options=pipeline_options) as p:
+    (p
+        | "Read From GCS" >> apache_beam.io.ReadFromParquet(PARQUET_DATA_BUCKET)
+        | "Clean Data" >> apache_beam.ParDo(CleanData())
+        | "Write to BigQuery" >> apache_beam.io.WriteToBigQuery(
+            table=BQ_TABLE,
+            schema=SCHEMA,
+            write_disposition=apache_beam.io.BigQueryDisposition.WRITE_APPEND,
+            create_disposition=apache_beam.io.BigQueryDisposition.CREATE_IF_NEEDED
+    ))
