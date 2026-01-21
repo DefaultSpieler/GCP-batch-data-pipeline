@@ -1,0 +1,13 @@
+import apache_beam as beam
+
+input_data = [1, 2, 3, 4, 5, 6]
+
+def square_num(x):
+    return x*x
+
+with beam.Pipeline() as p:
+    num = p |"Create Data" >> beam.Create(input_data)
+
+    sq_num = num |"Perform Square" >> beam.Map(square_num)
+
+    sq_num |"Print Data" >> beam.Map(print)
